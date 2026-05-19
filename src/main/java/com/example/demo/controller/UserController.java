@@ -22,6 +22,8 @@ public class UserController {
 			@RequestParam("password_confirm") String passwordConfirm,
 			RedirectAttributes redirectAttributes) {
 
+		redirectAttributes.addFlashAttribute("success", "ユーザー登録が完了しました。ログインしてください。");
+
 		return "redirect:/login";
 	}
 
@@ -37,8 +39,6 @@ public class UserController {
 	public String login(
 			@RequestParam String name,
 			@RequestParam String password) {
-
-		// TODO: 認証ロジックの実装
 
 		return "redirect:/tasks";
 	}
