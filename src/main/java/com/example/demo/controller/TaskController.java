@@ -1,78 +1,97 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.entity.Task;
+import com.example.demo.repository.TaskRepository;
+
 @Controller
+@RequestMapping("/tasks")
 public class TaskController {
 
-	@GetMapping("/tasks")
-	public String index(
-			@RequestParam(required = false) Integer categoryId,
-			@RequestParam(required = false) String sort,
-			Model model) {
+	@Autowired
+	private TaskRepository taskRepository;
 
-		return "tasks/index";
-	}
+	@Autowired
+	/*private TaskService taskService;
+	
+	// タスク一覧表示
+	@GetMapping
+	public String index(@RequestParam(required = false) Integer categoryId, Model model) {
+	    List<Task> tasks = taskService.getAllTasks(categoryId);
+	    
+	    // 経過時間を反映した合計時間を計算して渡す
+	    int totalRemainingTime = taskService.calculateTotalRemainingTime(tasks);
+	    
+	    model.addAttribute("tasks", tasks);
+	    model.addAttribute("totalTime", totalRemainingTime);
+	    model.addAttribute("taskService", taskService); // HTML側で個別残り時間を出す用
+	    return "tasklist";
+	}*/
 
-	@GetMapping("/tasks/create")
+	@GetMapping("/create")
 	public String createForm() {
-		return "tasks/create";
+		return "taskadd";
 	}
 
-	@PostMapping("/tasks/create")
-	public String registerTask(
-			@RequestParam Integer categoryId,
-			@RequestParam String title,
-			@RequestParam String closing_date,
-			@RequestParam String progress,
-			@RequestParam String memo,
-			@RequestParam String time,
-			@RequestParam String date) {
-
+	@PostMapping("/create")
+	public String registerTask(Task task) {
+		taskRepository.save(task);
 		return "redirect:/tasks";
 	}
 
-	@GetMapping("/tasks/{id}/edit")
-	public String editForm(@PathVariable("id") Long id, Model model) {
-
-		return "tasks/edit";
+	@GetMapping("/{id}/edit")
+	public String editForm(@PathVariable Long id, Model model) {
+		Task task = taskRepository.findById(id).orElseThrow();
+		model.addAttribute("task", task);
+		return "taskedit";
 	}
 
-	@GetMapping("/tasks/{id}/delete")
-	public String deletePopup(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("taskId", id);
-		return "tasks/delete_popup";
-	}
-
-	@PostMapping("/tasks/{id}/delete")
-	public String deleteAction(
-			@PathVariable("id") Long id,
-			@RequestParam(value = "action", required = false) String action) {
-
-		if ("cancel".equals(action)) {
-			return "redirect:/tasks";
-		}
-
+	@PostMapping("/{id}/edit")
+	public String updateTask(@PathVariable Long id, @ModelAttribute Task updatedTask) {
+		Task task = taskRepository.findById(id).orElseThrow();
+		task.setCategoryId(updatedTask.getCategoryId());
+		task.setTitle(updatedTask.getTitle());
+		task.setProgress(updatedTask.getProgress());
+		task.setDate(updatedTask.getDate());
+		task.setClosingDate(updatedTask.getClosingDate());
+		task.setTime(updatedTask.getTime());
+		task.setMemo(updatedTask.getMemo());
+		taskRepository.save(task);
 		return "redirect:/tasks";
 	}
 
-	@GetMapping("/logout")
-	public String logoutPopup() {
-		return "logout_popup";
+	@PostMapping("/delete")
+	public String deleteTasks(@RequestParam(value = "task_ids", required = false) List<Long> taskIds) {
+		if (taskIds != null) {
+			taskRepository.deleteAllById(taskIds);
+		}
+		return "redirect:/tasks";
 	}
 
-	@PostMapping("/logout")
-	public String logoutAction(@RequestParam(value = "action", required = false) String action) {
-
-		if ("cancel".equals(action)) {
-			return "redirect:/tasks";
+	@PostMapping("/update-progress")
+	public String updateProgress(@RequestParam(value = "task_ids", required = false) List<Long> taskIds) {
+		if (taskIds != null) {
+			List<Task> tasks = taskRepository.findAllById(taskIds);
+			for (Task task : tasks) {
+				if ("未着手".equals(task.getProgress())) {
+					task.setProgress("進行中");
+				} else if ("進行中".equals(task.getProgress())) {
+					task.setProgress("完了");
+				}
+			}
+			taskRepository.saveAll(tasks);
 		}
-
-		return "redirect:/login";
+		return "redirect:/tasks";
 	}
 }

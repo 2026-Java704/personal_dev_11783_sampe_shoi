@@ -1,74 +1,73 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>タスク一覧</title>
+	<meta charset="UTF-8">
+	<title>タスク一覧</title>
 </head>
+
 <body>
+	<div>
+		<span>〇〇様</span>
+		<a th:href="@{/login}" onclick="return confirm('ログアウトしますか？')">ログアウト</a>
+	</div>
+	<h1>タスク</h1>
 
-    <div>
-        <span>〇〇様</span>
-        <a th:href="@{/logout}">ログアウト</a>
-    </div>
+	<form th:action="@{/tasks}" method="get">
+		<label><input type="radio" name="categoryId" value="" checked> 全て</label>
+		<label><input type="radio" name="categoryId" value="1"> 日常</label>
+		<label><input type="radio" name="categoryId" value="2"> 仕事</label>
+		<button type="submit">ソート</button>
+	</form>
+	<br>
 
-    <h1>タスク</h1>
+	<h3 th:text="'予想合計タスク時間：' + ${totalTime} + ' 分'">予想合計タスク時間：0分</h3>
 
-    <form th:action="@{/tasks}" method="get">
-        <label>
-            <input type="radio" name="categoryId" value="" checked> 全て
-        </label>
-        <label>
-            <input type="radio" name="categoryId" value="1"> 日常
-        </label>
-        <label>
-            <input type="radio" name="categoryId" value="2"> 仕事
-        </label>
-        
-        <button type="submit">ソート</button>
-    </form>
-    <br>
+	<form id="taskForm" method="post">
+		<table border="1">
+			<tr>
+				<th>選択</th>
+				<th>タイトル</th>
+				<th>進捗状況</th>
+				<th>開始日</th>
+				<th>期限</th>
+				<th>メモ</th>
+				<th>残り時間</th>
+				<th>操作</th>
+			</tr>
+			<tr th:each="task : ${tasks}">
+				<td><input type="checkbox" name="task_ids" th:value="${task.id}"></td>
+				<td th:text="${task.title}"></td>
+				<td th:text="${task.progress}"></td>
+				<td th:text="${task.date}"></td>
+				<td th:text="${task.closingDate}"></td>
+				<td th:text="${task.memo}"></td>
+				<td th:text="${taskService.calculateRemainingTime(task)} + ' 分'"></td>
+				<td>
+					<a th:href="@{/tasks/{id}/edit(id=${task.id})}">更新画面へ</a>
+				</td>
+			</tr>
+		</table>
+		<br>
 
-    <div>
-        <span>id</span> | 
-        <span>タイトル</span> | 
-        <span>進捗状況</span> | 
-        <span>開始日</span> | 
-        <span>期限</span> | 
-        <span>メモ</span> | 
-        <span>操作</span>
-    </div>
-    <hr>
+		<button type="submit" onclick="submitAction('/tasks/update-progress')">進捗更新</button>
+		<button type="submit" onclick="return confirmDelete()">削除</button>
+		<a th:href="@{/tasks/create}"><button type="button">＋</button></a>
+	</form>
 
-    <div>
-        <h3>〇月〇日 予想合計タスク時間：分</h3>
-        <form>
-            <div>
-                <input type="checkbox" name="task_ids" value="1" checked>
-                <input type="text" value="やること" readonly>
-            </div>
-            <div>
-                <input type="checkbox" name="task_ids" value="2">
-                <input type="text" value="やること" readonly>
-            </div>
-            <div>
-                <input type="checkbox" name="task_ids" value="3">
-                <input type="text" value="やること" readonly>
-            </div>
-            <div>
-                <input type="checkbox" name="task_ids" value="4">
-                <input type="text" value="やること" readonly>
-            </div>
-        </form>
-    </div>
-
-    <br>
-    <div>
-        <a th:href="@{/tasks/{id}/edit(id=1)}"><button type="button">履歴/更新</button></a>
-        
-        <a th:href="@{/tasks/{id}/delete(id=1)}"><button type="button">削除</button></a>
-        
-        <a th:href="@{/tasks/create}"><button type="button">＋</button></a>
-    </div>
-
+	<script>
+		function submitAction(url) {
+			var form = document.getElementById('taskForm');
+			form.action = url;
+		}
+		function confirmDelete() {
+			if (confirm('本当に削除しますか？')) {
+				submitAction('/tasks/delete');
+				return true;
+			}
+			return false;
+		}
+	</script>
 </body>
+
 </html>

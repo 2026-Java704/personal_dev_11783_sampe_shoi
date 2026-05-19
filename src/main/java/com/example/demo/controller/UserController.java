@@ -10,23 +10,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserController {
 
-	@GetMapping("/users/new")
-	public String createForm() {
-		return "users/new";
-	}
-
-	@PostMapping("/users/add")
-	public String register(
-			@RequestParam String name,
-			@RequestParam String password,
-			@RequestParam("password_confirm") String passwordConfirm,
-			RedirectAttributes redirectAttributes) {
-
-		redirectAttributes.addFlashAttribute("success", "ユーザー登録が完了しました。ログインしてください。");
-
-		return "redirect:/login";
-	}
-
 	@GetMapping({ "/", "/login" })
 	public String loginForm(@RequestParam(required = false) String error, Model model) {
 		if (error != null) {
@@ -36,10 +19,18 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public String login(
-			@RequestParam String name,
-			@RequestParam String password) {
-
+	public String login(@RequestParam String name, @RequestParam String password) {
 		return "redirect:/tasks";
+	}
+
+	@GetMapping("/users/new")
+	public String createForm() {
+		return "useradd";
+	}
+
+	@PostMapping("/users/add")
+	public String register(@RequestParam String name, RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("success", "新規登録が完了しました。ログインしてください。");
+		return "redirect:/login";
 	}
 }
