@@ -1,10 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>新規タスク作成</title>
 </head>
 <body>
+
+    <h1>新規タスク作成</h1>
+
+    <form th:action="@{/tasks/create}" method="post">
+        <input type="hidden" name="progress" value="未着手">
+
+        <table border="1">
+            <tr>
+                <th>カテゴリ</th>
+                <td>
+                    <label><input type="radio" name="categoryId" value="2" required> 仕事</label>
+                    <label><input type="radio" name="categoryId" value="1"> 日常</label>
+                </td>
+            </tr>
+            <tr>
+                <th>タイトル</th>
+                <td>
+                    <input type="text" name="title" required>
+                </td>
+            </tr>
+            <tr>
+                <th>タスク開始日</th>
+                <td>
+                    <input type="date" name="date" required>
+                </td>
+            </tr>
+            <tr>
+                <th>期限</th>
+                <td>
+                    <input type="date" name="closing_date" required>
+                </td>
+            </tr>
+            <tr>
+                <th>予想所要時間</th>
+                <td>
+                    <input type="text" name="time" required>
+                </td>
+            </tr>
+            <tr>
+                <th>メモ</th>
+                <td>
+                    <textarea name="memo" rows="4" cols="40"></textarea>
+                </td>
+            </tr>
+        </table>
+        <br>
+
+        <button type="submit">新規作成</button>
+    </form>
 
 </body>
 </html>
