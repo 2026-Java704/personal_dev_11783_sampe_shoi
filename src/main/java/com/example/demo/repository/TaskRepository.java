@@ -10,4 +10,8 @@ import com.example.demo.entity.Task;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	List<Task> findByCategoryId(Integer categoryId);
+
+	List<Task> findByUsername(String username);
+
+	List<Task> findByUsernameAndCategoryId(String username, Integer categoryId);
 }

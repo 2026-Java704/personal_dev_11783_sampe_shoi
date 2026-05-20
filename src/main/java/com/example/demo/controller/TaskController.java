@@ -30,14 +30,13 @@ public class TaskController {
 
 	@GetMapping
 	public String index(@RequestParam(required = false) Integer categoryId, Model model, HttpSession session) {
-		List<Task> tasks = taskService.getAllTasks(categoryId);
-
-		int totalRemainingTime = taskService.calculateTotalRemainingTime(tasks);
-
 		String loginUser = (String) session.getAttribute("loginUser");
+
 		if (loginUser == null) {
-			loginUser = "ゲスト";
+			return "redirect:/login";
 		}
+		List<Task> tasks = taskService.getAllTasks(loginUser, categoryId);
+		int totalRemainingTime = taskService.calculateTotalRemainingTime(tasks);
 
 		model.addAttribute("tasks", tasks);
 		model.addAttribute("totalTime", totalRemainingTime);
@@ -52,7 +51,12 @@ public class TaskController {
 	}
 
 	@PostMapping("/create")
-	public String registerTask(Task task) {
+	public String registerTask(Task task, HttpSession session) {
+		String loginUser = (String) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+		task.setUsername(loginUser);
 		task.setProgress("未着手");
 		task.setCreatedAt(java.time.LocalDateTime.now());
 		taskRepository.save(task);

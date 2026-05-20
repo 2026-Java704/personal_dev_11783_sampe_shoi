@@ -13,11 +13,11 @@ public class TaskService {
 	@Autowired
 	private TaskRepository taskRepository;
 
-	public List<Task> getAllTasks(Integer categoryId) {
+	public List<Task> getAllTasks(String username, Integer categoryId) {
 		if (categoryId != null) {
-			return taskRepository.findByCategoryId(categoryId);
+			return taskRepository.findByUsernameAndCategoryId(username, categoryId);
 		}
-		return taskRepository.findAll();
+		return taskRepository.findByUsername(username);
 	}
 
 	public int calculateRemainingTime(Task task) {
