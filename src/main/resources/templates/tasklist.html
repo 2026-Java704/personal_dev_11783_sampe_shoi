@@ -8,7 +8,7 @@
 
 <body>
 	<div>
-		<span>〇〇様</span>
+		<span th:text="${username} + ' 様'">様</span>
 		<a th:href="@{/login}" onclick="return confirm('ログアウトしますか？')">ログアウト</a>
 	</div>
 	<h1>タスク</h1>
@@ -42,7 +42,7 @@
 				<td th:text="${task.date}"></td>
 				<td th:text="${task.closingDate}"></td>
 				<td th:text="${task.memo}"></td>
-				<td th:text="${taskService.calculateRemainingTime(task)} + ' 分'"></td>
+				<td th:text="${task.remainingTime} + ' 分'"></td>
 				<td>
 					<a th:href="@{/tasks/{id}/edit(id=${task.id})}">更新画面へ</a>
 				</td>

@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +17,7 @@ public class Task {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	@Column(name = "category_id")
 	private Integer categoryId;
 	private String title;
 	private String progress = "未着手";
@@ -96,5 +98,30 @@ public class Task {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public int getRemainingTime() {
+		if ("完了".equals(this.progress)) {
+			return 0;
+		}
+
+		if (this.progress == null || "未着手".equals(this.progress)) {
+			return this.time;
+		}
+
+		if (this.date != null) {
+			LocalDateTime startDateTime = this.date.atStartOfDay();
+			if (LocalDateTime.now().isBefore(startDateTime)) {
+				return this.time;
+			}
+		}
+
+		if (this.createdAt == null) {
+			return this.time;
+		}
+
+		long elapsedMinutes = Duration.between(this.createdAt, LocalDateTime.now()).toMinutes();
+		int remaining = this.time - (int) elapsedMinutes;
+		return Math.max(remaining, 0);
 	}
 }

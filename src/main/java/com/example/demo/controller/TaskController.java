@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.Task;
 import com.example.demo.repository.TaskRepository;
+import com.example.demo.service.TaskService;
 
 @Controller
 @RequestMapping("/tasks")
@@ -23,21 +26,25 @@ public class TaskController {
 	private TaskRepository taskRepository;
 
 	@Autowired
-	/*private TaskService taskService;
-	
-	// タスク一覧表示
+	private TaskService taskService;
+
 	@GetMapping
-	public String index(@RequestParam(required = false) Integer categoryId, Model model) {
-	    List<Task> tasks = taskService.getAllTasks(categoryId);
-	    
-	    // 経過時間を反映した合計時間を計算して渡す
-	    int totalRemainingTime = taskService.calculateTotalRemainingTime(tasks);
-	    
-	    model.addAttribute("tasks", tasks);
-	    model.addAttribute("totalTime", totalRemainingTime);
-	    model.addAttribute("taskService", taskService); // HTML側で個別残り時間を出す用
-	    return "tasklist";
-	}*/
+	public String index(@RequestParam(required = false) Integer categoryId, Model model, HttpSession session) {
+		List<Task> tasks = taskService.getAllTasks(categoryId);
+
+		int totalRemainingTime = taskService.calculateTotalRemainingTime(tasks);
+
+		String loginUser = (String) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			loginUser = "ゲスト";
+		}
+
+		model.addAttribute("tasks", tasks);
+		model.addAttribute("totalTime", totalRemainingTime);
+		model.addAttribute("taskService", taskService);
+		model.addAttribute("username", loginUser);
+		return "tasklist";
+	}
 
 	@GetMapping("/create")
 	public String createForm() {
@@ -46,6 +53,8 @@ public class TaskController {
 
 	@PostMapping("/create")
 	public String registerTask(Task task) {
+		task.setProgress("未着手");
+		task.setCreatedAt(java.time.LocalDateTime.now());
 		taskRepository.save(task);
 		return "redirect:/tasks";
 	}
