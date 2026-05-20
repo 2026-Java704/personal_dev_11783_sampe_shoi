@@ -1,28 +1,147 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
-<head><meta charset="UTF-8"><title>新規タスク作成</title></head>
+
+<head>
+	<meta charset="UTF-8">
+	<title>新規タスク作成</title>
+	<style>
+	        body {
+	            font-family: 'Helvetica Neue', Arial, sans-serif;
+	            background-color: #f4f6f9;
+	            color: #333;
+	            margin: 0;
+	            padding: 40px 20px;
+	        }
+
+	        h1 {
+	            max-width: 600px;
+	            margin: 0 auto 24px auto;
+	            color: #2c3e50;
+	        }
+
+	        form {
+	            max-width: 600px;
+	            margin: 0 auto;
+	            background: #fff;
+	            padding: 30px;
+	            border-radius: 8px;
+	            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+	        }
+
+	        table {
+	            width: 100%;
+	            border-collapse: collapse;
+	            border: none !important;
+	        }
+
+	        th, td {
+	            padding: 16px 0;
+	            border-bottom: 1px solid #edf2f7;
+	            text-align: left;
+	        }
+
+	        th {
+	            width: 30%;
+	            color: #4a5568;
+	            font-size: 14px;
+	            vertical-align: top;
+	            padding-top: 20px;
+	        }
+
+	        input[type="text"],
+	        input[type="date"],
+	        input[type="number"],
+	        textarea {
+	            width: 100%;
+	            padding: 10px;
+	            border: 1px solid #ccd1d9;
+	            border-radius: 6px;
+	            font-size: 14px;
+	            box-sizing: border-box;
+	            transition: border-color 0.2s;
+	        }
+
+	        input[type="text"]:focus,
+	        input[type="date"]:focus,
+	        input[type="number"]:focus,
+	        textarea:focus {
+	            border-color: #3498db;
+	            outline: none;
+	        }
+
+	        input[type="number"] {
+	            width: 100px;
+	            display: inline-block;
+	        }
+
+	        textarea {
+	            resize: vertical;
+	        }
+
+	        label {
+	            margin-right: 15px;
+	            font-size: 14px;
+	            cursor: pointer;
+	            display: inline-flex;
+	            align-items: center;
+	            gap: 6px;
+	        }
+
+	        button[type="submit"] {
+	            background-color: #3498db;
+	            color: white;
+	            border: none;
+	            padding: 12px 24px;
+	            border-radius: 6px;
+	            font-size: 16px;
+	            font-weight: bold;
+	            cursor: pointer;
+	            width: 100%;
+	            margin-top: 20px;
+	            transition: background-color 0.2s;
+	        }
+
+	        button[type="submit"]:hover {
+	            background-color: #2980b9;
+	        }
+	    </style>
+</head>
+
 <body>
-    <h1>新規タスク作成</h1>
-    <form th:action="@{/tasks/create}" method="post">
-        <table border="1">
-            <tr>
-                <th>カテゴリ</th>
-                <td>
-                    <label><input type="radio" name="categoryId" value="2" required> 仕事</label>
-                    <label><input type="radio" name="categoryId" value="1"> 日常</label>
-                </td>
-            </tr>
-            <tr><th>タイトル</th><td><input type="text" name="title" required></td></tr>
-            <tr><th>タスク開始日</th><td><input type="date" name="date" required></td></tr>
-            <tr><th>期限</th><td><input type="date" name="closingDate" required></td></tr>
-            <tr>
-                <th>予想所要時間</th>
-                <td><input type="number" name="time" style="text-align: right;" required> 分</td>
-            </tr>
-            <tr><th>メモ</th><td><textarea name="memo" rows="4" cols="40"></textarea></td></tr>
-        </table>
-        <br>
-        <button type="submit">新規作成</button>
-    </form>
+	<h1>新規タスク作成</h1>
+	<form th:action="@{/tasks/create}" method="post">
+		<table border="1">
+			<tr>
+				<th>カテゴリ</th>
+				<td>
+					<label><input type="radio" name="categoryId" value="2" required  style="transform:scale(1.5);"> 仕事</label>
+					<label><input type="radio" name="categoryId" value="1"  style="transform:scale(1.5);"> 日常</label>
+				</td>
+			</tr>
+			<tr>
+				<th>タイトル</th>
+				<td><input type="text" name="title" required></td>
+			</tr>
+			<tr>
+				<th>タスク開始日</th>
+				<td><input type="date" name="date" required></td>
+			</tr>
+			<tr>
+				<th>期限</th>
+				<td><input type="date" name="closingDate" required></td>
+			</tr>
+			<tr>
+				<th>予想所要時間</th>
+				<td><input type="number" name="time" style="text-align: right;" required> 分</td>
+			</tr>
+			<tr>
+				<th>メモ</th>
+				<td><textarea name="memo" rows="4" cols="40"></textarea></td>
+			</tr>
+		</table>
+		<br>
+		<button type="submit">新規作成</button>
+	</form>
 </body>
+
 </html>
