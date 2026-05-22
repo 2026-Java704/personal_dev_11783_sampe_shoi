@@ -10,35 +10,33 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // IDをデータベース側で自動連番に設定
-	private Long id; // ユーザーの一意なIDを保存する変数
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	private String name; // ユーザー名（ログイン時に使用）を保存する変数
-	private String password; // パスワード（ログイン時に使用）を保存する変数
-
-	// --- 以下、各変数を安全に読み書きするための ゲッター（get）と セッター（set） ---
+	private String name;
+	private String password;
 
 	public Long getId() {
-		return id; // ユーザーIDを取得する
+		return id;
 	}
 
 	public void setId(Long id) {
-		this.id = id; // ユーザーIDを設定する
+		this.id = id;
 	}
 
 	public String getName() {
-		return name; // ユーザー名を取得する
+		return name;
 	}
 
 	public void setName(String name) {
-		this.name = name; // ユーザー名を設定する
+		this.name = name;
 	}
 
 	public String getPassword() {
-		return password; // パスワードを取得する
+		return password;
 	}
 
 	public void setPassword(String password) {
-		this.password = password; // パスワードを設定する
+		this.password = password;
 	}
 }

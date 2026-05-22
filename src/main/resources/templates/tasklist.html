@@ -6,9 +6,9 @@
 	<title>タスク一覧</title>
 	<style>
 		body {
-			font-family: 'Helvetica Neue', Arial, sans-serif;
-			background-color: #f4f6f9;
-			color: #333;
+			font-family:"Comic Sans MS", Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+			background-color: #f1f5f9;
+			color: #1e293b;
 			margin: 0;
 			padding: 40px 20px;
 		}
@@ -19,62 +19,86 @@
 			align-items: center;
 			max-width: 1000px;
 			margin: 0 auto 20px auto;
-			font-size: 14px;
+			font-size: 16px;
+			background: #fff;
+			padding: 12px 20px;
+			border-radius: 12px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+		}
+
+		body>div:first-child span {
+			font-weight: bold;
+			color: #334155;
 		}
 
 		body>div:first-child a {
-			color: #e74c3c;
+			color: #ef4444;
 			text-decoration: none;
 			font-weight: bold;
+			padding: 6px 12px;
+			border-radius: 8px;
+			background-color: #fef2f2;
+			transition: all 0.2s;
 		}
 
 		body>div:first-child a:hover {
-			text-decoration: underline;
+			background-color: #fee2e2;
 		}
 
 		h1 {
 			max-width: 1000px;
 			margin: 0 auto 20px auto;
-			color: #2c3e50;
+			color: #0f172a;
+			font-size: 28px;
 		}
 
 		form[method="get"] {
 			max-width: 1000px;
 			margin: 0 auto 20px auto;
 			background: #fff;
-			padding: 15px;
-			border-radius: 8px;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+			padding: 16px 20px;
+			border-radius: 12px;
+			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+			display: flex;
+			align-items: center;
+			gap: 15px;
 		}
 
 		form[method="get"] label {
-			margin-right: 15px;
-			font-size: 14px;
+			font-size: 16px;
+			font-weight: 600;
+			color: #475569;
 			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
 		}
 
-		anapdajsjpjsjnnasdsadjdjopwljqpq form[method="get"] button {
-			background: #7f8c8d;
+		form[method="get"] button {
+			background: #64748b;
 			color: white;
 			border: none;
-			padding: 6px 12px;
-			border-radius: 4px;
+			padding: 8px 16px;
+			border-radius: 8px;
 			cursor: pointer;
+			font-weight: bold;
+			transition: background 0.2s;
+			margin-left: auto;
 		}
 
 		form[method="get"] button:hover {
-			background: #95a5a6;
+			background: #475569;
 		}
 
 		h3 {
 			max-width: 1000px;
 			margin: 0 auto 20px auto;
-			background: #e8f4fd;
-			color: #2980b9;
-			padding: 12px;
-			border-radius: 6px;
+			background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+			color: white;
+			padding: 16px;
+			border-radius: 12px;
 			font-size: 16px;
-			border-left: 5px solid #3498db;
+			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
 			box-sizing: border-box;
 		}
 
@@ -87,29 +111,31 @@
 			width: 100%;
 			border-collapse: collapse;
 			background: #fff;
-			border-radius: 8px;
+			border-radius: 12px;
 			overflow: hidden;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 			border: none !important;
 		}
 
 		th,
 		td {
-			padding: 14px;
+			padding: 16px;
 			text-align: left;
-			border-bottom: 1px solid #edf2f7;
+			border-bottom: 1px solid #f1f5f9;
 		}
 
 		th {
 			background-color: #f8fafc;
-			color: #718096;
-			font-size: 13px;
+			color: #64748b;
+			font-size: 16px;
+			font-weight: 700;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
 		}
 
 		td {
 			font-size: 14px;
+			color: #334155;
 		}
 
 		tr:hover {
@@ -117,7 +143,7 @@
 		}
 
 		td a {
-			color: #3498db;
+			color: #3b82f6;
 			text-decoration: none;
 			font-weight: bold;
 		}
@@ -127,48 +153,52 @@
 		}
 
 		#taskForm button {
-			padding: 10px 20px;
-			border-radius: 6px;
+			padding: 12px 24px;
+			border-radius: 8px;
 			font-size: 14px;
 			font-weight: bold;
 			cursor: pointer;
 			border: none;
 			margin-right: 8px;
-			transition: background-color 0.2s;
+			transition: all 0.2s ease;
 		}
 
 		#taskForm button:nth-of-type(1) {
-			background-color: #2ecc71;
+			background-color: #10b981;
 			color: white;
+			box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
 		}
 
 		#taskForm button:nth-of-type(1):hover {
-			background-color: #27ae60;
+			background-color: #059669;
 		}
 
 		#taskForm button:nth-of-type(2) {
-			background-color: #e74c3c;
+			background-color: #ef4444;
 			color: white;
+			box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
 		}
 
 		#taskForm button:nth-of-type(2):hover {
-			background-color: #c0392b;
+			background-color: #dc2626;
 		}
 
 		#taskForm a button {
-			background-color: #3498db;
+			background-color: #3b82f6;
 			color: white;
 			border-radius: 50%;
-			width: 40px;
-			height: 40px;
+			width: 44px;
+			height: 44px;
 			padding: 0;
-			font-size: 20px;
-			line-height: 40px;
+			font-size: 22px;
+			line-height: 44px;
 			vertical-align: middle;
+			box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 		}
 
 		#taskForm a button:hover {
-			background-color: #2980b9;
+			background-color: #2563eb;
+			transform: scale(1.05);
 		}
 	</style>
 </head>
@@ -178,13 +208,13 @@
 		<span th:text="${username} + ' 様'">様</span>
 		<a th:href="@{/login}" onclick="return confirm('ログアウトしますか？')">ログアウト</a>
 	</div>
-	<h1>タスク</h1>
+	<h1>タスク一覧</h1>
 
 	<form th:action="@{/tasks}" method="get">
 		<label><input type="radio" name="categoryId" value="" checked style="transform:scale(1.5);"> 全て</label>
 		<label><input type="radio" name="categoryId" value="1" style="transform:scale(1.5);"> 日常</label>
 		<label><input type="radio" name="categoryId" value="2" style="transform:scale(1.5);"> 仕事</label>
-		<button type="submit">ソート</button>
+		<button type="submit">絞り込み</button>
 	</form>
 	<br>
 
@@ -194,6 +224,7 @@
 		<table border="1">
 			<tr>
 				<th>選択</th>
+				<th>作成日</th>
 				<th>タイトル</th>
 				<th>進捗状況</th>
 				<th>開始日</th>
@@ -204,6 +235,7 @@
 			</tr>
 			<tr th:each="task : ${tasks}">
 				<td><input type="checkbox" name="task_ids" th:value="${task.id}" style="transform:scale(1.5);"></td>
+				<td th:text="${task.formattedCreatedAt}"></td>
 				<td th:text="${task.title}"></td>
 				<td th:text="${task.progress}"></td>
 				<td th:text="${task.date}"></td>

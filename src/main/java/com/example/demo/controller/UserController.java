@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/controller/UserController.java
 package com.example.demo.controller;
 
 import java.util.Optional;
@@ -50,7 +49,13 @@ public class UserController {
 
 	@PostMapping("/users/add")
 	public String register(@RequestParam String name, @RequestParam String password,
-			RedirectAttributes redirectAttributes) {
+			Model model, RedirectAttributes redirectAttributes) {
+
+		if (userRepository.findByName(name).isPresent()) {
+			model.addAttribute("error", "そのユーザー名は既に存在します。");
+			return "useradd";
+		}
+
 		User user = new User();
 		user.setName(name);
 		user.setPassword(password);

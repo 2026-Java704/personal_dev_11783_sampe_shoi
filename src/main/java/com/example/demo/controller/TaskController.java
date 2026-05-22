@@ -73,6 +73,14 @@ public class TaskController {
 	@PostMapping("/{id}/edit")
 	public String updateTask(@PathVariable Long id, @ModelAttribute Task updatedTask) {
 		Task task = taskRepository.findById(id).orElseThrow();
+
+		if ("未着手".equals(task.getProgress()) && "進行中".equals(updatedTask.getProgress())) {
+			task.setStartedAt(java.time.LocalDateTime.now());
+		}
+		if ("進行中".equals(task.getProgress()) && "未着手".equals(updatedTask.getProgress())) {
+			task.setStartedAt(null);
+		}
+
 		task.setCategoryId(updatedTask.getCategoryId());
 		task.setTitle(updatedTask.getTitle());
 		task.setProgress(updatedTask.getProgress());
@@ -99,6 +107,7 @@ public class TaskController {
 			for (Task task : tasks) {
 				if ("未着手".equals(task.getProgress())) {
 					task.setProgress("進行中");
+					task.setStartedAt(java.time.LocalDateTime.now());
 				} else if ("進行中".equals(task.getProgress())) {
 					task.setProgress("完了");
 				}
@@ -106,5 +115,6 @@ public class TaskController {
 			taskRepository.saveAll(tasks);
 		}
 		return "redirect:/tasks";
+
 	}
 }

@@ -15,9 +15,9 @@ public class TaskService {
 
 	public List<Task> getAllTasks(String username, Integer categoryId) {
 		if (categoryId != null) {
-			return taskRepository.findByUsernameAndCategoryId(username, categoryId);
+			return taskRepository.findByUsernameAndCategoryIdOrderByClosingDateAsc(username, categoryId);
 		}
-		return taskRepository.findByUsername(username);
+		return taskRepository.findByUsernameOrderByClosingDateAsc(username);
 	}
 
 	public int calculateRemainingTime(Task task) {
