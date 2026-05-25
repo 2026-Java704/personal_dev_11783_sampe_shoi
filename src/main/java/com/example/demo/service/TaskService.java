@@ -56,9 +56,9 @@ public class TaskService {
 					return t1.getCreatedAt().compareTo(t2.getCreatedAt());
 				}
 				if (t1.getStartedAt() == null)
-					return 1; // t1を後ろへ
+					return 1;
 				if (t2.getStartedAt() == null)
-					return -1; // t2を後ろへ
+					return -1;
 
 				int dateCompare = t1.getStartedAt().compareTo(t2.getStartedAt());
 				if (dateCompare == 0) {
