@@ -29,19 +29,27 @@ public class TaskController {
 	private TaskService taskService;
 
 	@GetMapping
-	public String index(@RequestParam(required = false) Integer categoryId, Model model, HttpSession session) {
+	public String index(
+			@RequestParam(required = false) Integer categoryId,
+			@RequestParam(required = false, defaultValue = "closingDate") String sort,
+			Model model,
+			HttpSession session) {
 		String loginUser = (String) session.getAttribute("loginUser");
 
 		if (loginUser == null) {
 			return "redirect:/login";
 		}
-		List<Task> tasks = taskService.getAllTasks(loginUser, categoryId);
+
+		List<Task> tasks = taskService.getAllTasks(loginUser, categoryId, sort);
 		int totalRemainingTime = taskService.calculateTotalRemainingTime(tasks);
 
 		model.addAttribute("tasks", tasks);
 		model.addAttribute("totalTime", totalRemainingTime);
 		model.addAttribute("taskService", taskService);
 		model.addAttribute("username", loginUser);
+		model.addAttribute("currentCategoryId", categoryId);
+		model.addAttribute("currentSort", sort);
+
 		return "tasklist";
 	}
 
@@ -83,6 +91,7 @@ public class TaskController {
 
 		task.setCategoryId(updatedTask.getCategoryId());
 		task.setTitle(updatedTask.getTitle());
+		task.setPriority(updatedTask.getPriority());
 		task.setProgress(updatedTask.getProgress());
 		task.setDate(updatedTask.getDate());
 		task.setClosingDate(updatedTask.getClosingDate());

@@ -42,6 +42,8 @@ public class Task {
 	@Column(name = "started_at")
 	private LocalDateTime startedAt;
 
+	private String priority = "中";
+
 	public Long getId() {
 		return id;
 	}
@@ -136,6 +138,14 @@ public class Task {
 		}
 		java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		return this.createdAt.format(formatter);
+	}
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
 	}
 
 	public int getRemainingTime() {

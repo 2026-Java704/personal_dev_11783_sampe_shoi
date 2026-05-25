@@ -211,11 +211,20 @@
 	<h1>タスク一覧</h1>
 
 	<form th:action="@{/tasks}" method="get">
-		<label><input type="radio" name="categoryId" value="" checked style="transform:scale(1.5);"> 全て</label>
-		<label><input type="radio" name="categoryId" value="1" style="transform:scale(1.5);"> 日常</label>
-		<label><input type="radio" name="categoryId" value="2" style="transform:scale(1.5);"> 仕事</label>
-		<button type="submit">絞り込み</button>
-	</form>
+			<label><input type="radio" name="categoryId" value="" th:checked="${currentCategoryId == null || currentCategoryId == ''}" style="transform:scale(1.5);"> 全て</label>
+			<label><input type="radio" name="categoryId" value="1" th:checked="${currentCategoryId == 1}" style="transform:scale(1.5);"> 日常</label>
+			<label><input type="radio" name="categoryId" value="2" th:checked="${currentCategoryId == 2}" style="transform:scale(1.5);"> 仕事</label>
+			
+			<span style="margin-left: 20px; font-weight: 600; color: #475569;">並び替え：</span>
+			<select name="sort" style="padding: 8px; border-radius: 8px; border: 2px solid #e2e8f0; background: #fff; font-size: 14px;">
+				<option value="priority" th:selected="${currentSort == 'priority'}">優先度（高～低）</option>
+				<option value="progress" th:selected="${currentSort == 'progress'}">進捗状況</option>
+				<option value="createdAt" th:selected="${currentSort == 'createdAt'}">作成日</option>
+				<option value="startedAt" th:selected="${currentSort == 'startedAt'}">開始日</option>
+				<option value="closingDate" th:selected="${currentSort == 'closingDate'}">期限</option>
+			</select>
+			<button type="submit">絞り込み・並び替え</button>
+		</form>
 	<br>
 
 	<h3 th:text="'予想合計タスク時間：' + ${totalTime} + ' 分'">予想合計タスク時間：0分</h3>
@@ -226,6 +235,7 @@
 				<th>選択</th>
 				<th>作成日</th>
 				<th>タイトル</th>
+				<th>優先度</th>
 				<th>進捗状況</th>
 				<th>開始日</th>
 				<th>期限</th>
@@ -237,6 +247,7 @@
 				<td><input type="checkbox" name="task_ids" th:value="${task.id}" style="transform:scale(1.5);"></td>
 				<td th:text="${task.formattedCreatedAt}"></td>
 				<td th:text="${task.title}"></td>
+				<td th:text="${task.priority}"></td>
 				<td th:text="${task.progress}"></td>
 				<td th:text="${task.date}"></td>
 				<td th:text="${task.closingDate}"></td>

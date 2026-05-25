@@ -138,6 +138,14 @@
 				<td><input type="text" name="title" th:value="${task.title}" required></td>
 			</tr>
 			<tr>
+			    <th>優先度</th>
+			    <td>
+			        <label><input type="radio" name="priority" value="高" style="transform:scale(1.5);" th:checked="${task.priority == '高'}"> 高</label>
+			        <label><input type="radio" name="priority" value="中" style="transform:scale(1.5);" th:checked="${task.priority == '中'}"> 中</label>
+			        <label><input type="radio" name="priority" value="低" style="transform:scale(1.5);" th:checked="${task.priority == '低'}"> 低</label>
+			    </td>
+			</tr>
+			<tr>
 				<th>進捗状況</th>
 				<td>
 					<label><input type="radio" name="progress" value="未着手" th:checked="${task.progress == '未着手'}">
