@@ -120,6 +120,10 @@
 
 <body>
 	<h1>内容変更</h1>
+	<div th:if="${error}"
+		style="background-color: #fde8e8; color: #ef4444; border: 1px solid #fee2e2; padding: 14px; margin: 0 auto 20px auto; border-radius: 10px; font-size: 14px; max-width: 600px; box-sizing: border-box; text-align: center; font-weight: 600;">
+		<span th:text="${error}"></span>
+	</div>
 	<form th:action="@{/tasks/{id}/edit(id=${task.id})}" method="post">
 		<table border="1">
 			<tr>
@@ -135,15 +139,19 @@
 			</tr>
 			<tr>
 				<th>タイトル</th>
-				<td><input type="text" name="title" th:value="${task.title}" required></td>
+				<td><input type="text" name="title" th:value="${task.title}" maxlength="30" placeholder="タイトル名（30文字以内）"
+						required></td>
 			</tr>
 			<tr>
-			    <th>優先度</th>
-			    <td>
-			        <label><input type="radio" name="priority" value="高" style="transform:scale(1.5);" th:checked="${task.priority == '高'}"> 高</label>
-			        <label><input type="radio" name="priority" value="中" style="transform:scale(1.5);" th:checked="${task.priority == '中'}"> 中</label>
-			        <label><input type="radio" name="priority" value="低" style="transform:scale(1.5);" th:checked="${task.priority == '低'}"> 低</label>
-			    </td>
+				<th>優先度</th>
+				<td>
+					<label><input type="radio" name="priority" value="高" style="transform:scale(1.5);"
+							th:checked="${task.priority == '高'}"> 高</label>
+					<label><input type="radio" name="priority" value="中" style="transform:scale(1.5);"
+							th:checked="${task.priority == '中'}"> 中</label>
+					<label><input type="radio" name="priority" value="低" style="transform:scale(1.5);"
+							th:checked="${task.priority == '低'}"> 低</label>
+				</td>
 			</tr>
 			<tr>
 				<th>進捗状況</th>

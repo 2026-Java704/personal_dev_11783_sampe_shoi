@@ -22,6 +22,7 @@ public class Task {
 	@Column(name = "category_id")
 	private Integer categoryId;
 
+	@Column(columnDefinition = "TEXT")
 	private String title;
 
 	private String progress = "未着手";
@@ -32,6 +33,7 @@ public class Task {
 
 	private Integer time;
 
+	@Column(columnDefinition = "TEXT")
 	private String memo;
 
 	@Column(name = "username")

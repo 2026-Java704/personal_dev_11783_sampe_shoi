@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.entity.Task;
 import com.example.demo.repository.TaskRepository;
@@ -59,10 +61,21 @@ public class TaskController {
 	}
 
 	@PostMapping("/create")
-	public String registerTask(Task task, HttpSession session) {
+	public String registerTask(Task task, HttpSession session, RedirectAttributes redirectAttributes) {
 		String loginUser = (String) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			return "redirect:/login";
+		}
+		if (task.getTitle() != null && task.getTitle().length() > 30) {
+			redirectAttributes.addFlashAttribute("error", "タイトルは30文字以内で入力してください。");
+			return "redirect:/tasks/create";
+		}
+
+		if (task.getDate() != null && task.getClosingDate() != null) {
+			if (task.getClosingDate().isBefore(task.getDate())) {
+				redirectAttributes.addFlashAttribute("error", "期限には、タスク開始日以降の日付を指定してください。");
+				return "redirect:/tasks/create";
+			}
 		}
 		task.setUsername(loginUser);
 		task.setProgress("未着手");
@@ -72,15 +85,35 @@ public class TaskController {
 	}
 
 	@GetMapping("/{id}/edit")
-	public String editForm(@PathVariable Long id, Model model) {
+	public String editForm(@PathVariable Long id, Model model, HttpSession session) {
+		String loginUser = (String) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
 		Task task = taskRepository.findById(id).orElseThrow();
+
+		if (!loginUser.equals(task.getUsername())) {
+			return "redirect:/tasks";
+		}
+
 		model.addAttribute("task", task);
 		return "taskedit";
 	}
 
 	@PostMapping("/{id}/edit")
-	public String updateTask(@PathVariable Long id, @ModelAttribute Task updatedTask) {
+	public String updateTask(@PathVariable Long id, @ModelAttribute Task updatedTask,
+			RedirectAttributes redirectAttributes) {
 		Task task = taskRepository.findById(id).orElseThrow();
+		if (updatedTask.getTitle() != null && updatedTask.getTitle().length() > 30) {
+			redirectAttributes.addFlashAttribute("error", "タイトルは30文字以内で入力してください。");
+			return "redirect:/tasks/" + id + "/edit";
+		}
+
+		if (updatedTask.getDate() != null && updatedTask.getDate().isBefore(LocalDate.now())) {
+			redirectAttributes.addFlashAttribute("error", "タスク開始日には、今日以降の日付を指定してください。");
+			return "redirect:/tasks/" + id + "/edit";
+		}
 
 		if ("未着手".equals(task.getProgress()) && "進行中".equals(updatedTask.getProgress())) {
 			task.setStartedAt(java.time.LocalDateTime.now());

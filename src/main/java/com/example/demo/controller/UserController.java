@@ -50,6 +50,14 @@ public class UserController {
 	@PostMapping("/users/add")
 	public String register(@RequestParam String name, @RequestParam String password,
 			Model model, RedirectAttributes redirectAttributes) {
+		if (name != null && name.length() > 20) {
+			model.addAttribute("error", "ユーザー名は20文字以内で入力してください。");
+			return "useradd";
+		}
+		if (password == null || password.length() < 6 || password.length() > 20) {
+			model.addAttribute("error", "パスワードは6文字以上20文字以内で入力してください。");
+			return "useradd";
+		}
 
 		if (userRepository.findByName(name).isPresent()) {
 			model.addAttribute("error", "そのユーザー名は既に存在します。");

@@ -120,6 +120,9 @@
 
 <body>
 	<h1>新規タスク作成</h1>
+	<div th:if="${error}" style="background-color: #fde8e8; color: #ef4444; border: 1px solid #fee2e2; padding: 14px; margin: 0 auto 20px auto; border-radius: 10px; font-size: 14px; max-width: 600px; box-sizing: border-box; text-align: center; font-weight: 600;">
+			<span th:text="${error}"></span>
+		</div>
 	<form th:action="@{/tasks/create}" method="post">
 		<table border="1">
 			<tr>
@@ -132,7 +135,7 @@
 			</tr>
 			<tr>
 				<th>タイトル</th>
-				<td><input type="text" name="title" required></td>
+				<td><input type="text" name="title" maxlength="30" placeholder="タイトル名（30文字以内）" required></td>
 			</tr>
 			<tr>
 			    <th>優先度</th>
@@ -163,5 +166,4 @@
 		<button type="submit">新規作成</button>
 	</form>
 </body>
-
 </html>

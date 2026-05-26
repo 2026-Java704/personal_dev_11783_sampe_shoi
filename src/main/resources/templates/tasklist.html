@@ -6,7 +6,7 @@
 	<title>タスク一覧</title>
 	<style>
 		body {
-			font-family:"Comic Sans MS", Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+			font-family: "Comic Sans MS", Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 			background-color: #f1f5f9;
 			color: #1e293b;
 			margin: 0;
@@ -200,6 +200,21 @@
 			background-color: #2563eb;
 			transform: scale(1.05);
 		}
+		
+		.task-title-cell {
+			max-width: 120px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-weight: bold;
+		}
+		
+		.task-memo-cell {
+			max-width: 150px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	</style>
 </head>
 
@@ -211,20 +226,25 @@
 	<h1>タスク一覧</h1>
 
 	<form th:action="@{/tasks}" method="get">
-			<label><input type="radio" name="categoryId" value="" th:checked="${currentCategoryId == null || currentCategoryId == ''}" style="transform:scale(1.5);"> 全て</label>
-			<label><input type="radio" name="categoryId" value="1" th:checked="${currentCategoryId == 1}" style="transform:scale(1.5);"> 日常</label>
-			<label><input type="radio" name="categoryId" value="2" th:checked="${currentCategoryId == 2}" style="transform:scale(1.5);"> 仕事</label>
-			
-			<span style="margin-left: 20px; font-weight: 600; color: #475569;">並び替え：</span>
-			<select name="sort" style="padding: 8px; border-radius: 8px; border: 2px solid #e2e8f0; background: #fff; font-size: 14px;">
-				<option value="priority" th:selected="${currentSort == 'priority'}">優先度（高～低）</option>
-				<option value="progress" th:selected="${currentSort == 'progress'}">進捗状況</option>
-				<option value="createdAt" th:selected="${currentSort == 'createdAt'}">作成日</option>
-				<option value="startedAt" th:selected="${currentSort == 'startedAt'}">開始日</option>
-				<option value="closingDate" th:selected="${currentSort == 'closingDate'}">期限</option>
-			</select>
-			<button type="submit">絞り込み・並び替え</button>
-		</form>
+		<label><input type="radio" name="categoryId" value=""
+				th:checked="${currentCategoryId == null || currentCategoryId == ''}" style="transform:scale(1.5);">
+			全て</label>
+		<label><input type="radio" name="categoryId" value="1" th:checked="${currentCategoryId == 1}"
+				style="transform:scale(1.5);"> 日常</label>
+		<label><input type="radio" name="categoryId" value="2" th:checked="${currentCategoryId == 2}"
+				style="transform:scale(1.5);"> 仕事</label>
+
+		<span style="margin-left: 20px; font-weight: 600; color: #475569;">並び替え：</span>
+		<select name="sort"
+			style="padding: 8px; border-radius: 8px; border: 2px solid #e2e8f0; background: #fff; font-size: 14px;">
+			<option value="priority" th:selected="${currentSort == 'priority'}">優先度（高～低）</option>
+			<option value="progress" th:selected="${currentSort == 'progress'}">進捗状況</option>
+			<option value="createdAt" th:selected="${currentSort == 'createdAt'}">作成日</option>
+			<option value="startedAt" th:selected="${currentSort == 'startedAt'}">開始日</option>
+			<option value="closingDate" th:selected="${currentSort == 'closingDate'}">期限</option>
+		</select>
+		<button type="submit">絞り込み・並び替え</button>
+	</form>
 	<br>
 
 	<h3 th:text="'予想合計タスク時間：' + ${totalTime} + ' 分'">予想合計タスク時間：0分</h3>
@@ -246,12 +266,12 @@
 			<tr th:each="task : ${tasks}">
 				<td><input type="checkbox" name="task_ids" th:value="${task.id}" style="transform:scale(1.5);"></td>
 				<td th:text="${task.formattedCreatedAt}"></td>
-				<td th:text="${task.title}"></td>
+				<td class="task-title-cell" th:title="${task.title}" th:text="${task.title}"></td>
 				<td th:text="${task.priority}"></td>
 				<td th:text="${task.progress}"></td>
 				<td th:text="${task.date}"></td>
 				<td th:text="${task.closingDate}"></td>
-				<td th:text="${task.memo}"></td>
+				<td class="task-memo-cell" th:title="${task.memo}" th:text="${task.memo}"></td>
 				<td th:text="${task.remainingTime} + ' 分'"></td>
 				<td>
 					<a th:href="@{/tasks/{id}/edit(id=${task.id})}">変更</a>
@@ -271,6 +291,11 @@
 			form.action = url;
 		}
 		function confirmDelete() {
+			const checkboxes = document.querySelectorAll('input[name="task_ids"]:checked');
+			if (checkboxes.length === 0) {
+				alert('削除するタスクを最低1つ選択してください。');
+				return false;
+			}
 			if (confirm('本当に削除しますか？')) {
 				submitAction('/tasks/delete');
 				return true;

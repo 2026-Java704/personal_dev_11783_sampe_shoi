@@ -125,9 +125,11 @@
 		style="background-color: #fde8e8; color: #e74c3c; border: 1px solid #f8b4b4; padding: 12px; margin-bottom: 20px; border-radius: 6px; font-size: 14px; width: 100%; max-width: 320px; box-sizing: border-box; text-align: center;"
 		th:text="${error}"></div>
 	<form id="registerForm" th:action="@{/users/add}" method="post" onsubmit="return validatePassword()">
-		<input type="text" name="name" placeholder="ユーザ名" required><br><br>
-		<input type="password" id="password" name="password" placeholder="パスワード" required><br><br>
-		<input type="password" id="password_confirm" name="password_confirm" placeholder="パスワード確認" required><br><br>
+		<input type="text" name="name" placeholder="ユーザ名（20文字以内）" maxlength="20" required><br><br>
+		<input type="password" id="password" name="password" placeholder="パスワード（6〜20文字）" maxlength="20"
+			required><br><br>
+		<input type="password" id="password_confirm" name="password_confirm" placeholder="パスワード確認" maxlength="20"
+			required><br><br>
 		<button type="submit">登録</button>
 	</form>
 
@@ -135,6 +137,11 @@
 		function validatePassword() {
 			var password = document.getElementById("password").value;
 			var confirm = document.getElementById("password_confirm").value;
+
+			if (password.length < 6) {
+				alert("パスワードは6文字以上で入力してください。");
+				return false;
+			}
 
 			if (password !== confirm) {
 				alert("パスワードが一致していません。もう一度入力してください。");
