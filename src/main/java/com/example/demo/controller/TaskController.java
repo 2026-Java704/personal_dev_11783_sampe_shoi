@@ -71,6 +71,11 @@ public class TaskController {
 			return "redirect:/tasks/create";
 		}
 
+		if (task.getDate() != null && task.getDate().isBefore(LocalDate.now())) {
+			redirectAttributes.addFlashAttribute("error", "タスク開始日には、今日以降の日付を指定してください。");
+			return "redirect:/tasks/create";
+		}
+
 		if (task.getDate() != null && task.getClosingDate() != null) {
 			if (task.getClosingDate().isBefore(task.getDate())) {
 				redirectAttributes.addFlashAttribute("error", "期限には、タスク開始日以降の日付を指定してください。");
